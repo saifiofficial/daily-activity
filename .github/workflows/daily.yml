@@ -1,1 +1,32 @@
-hi
+name: Daily Contribution
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Roz UTC 00:00 baje chalega
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update file
+        run: |
+          echo "Last Update: $(date)" > activity.txt
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Daily contribution" || echo "No changes"
+
+      - name: Push
+        run: |
+          git push
